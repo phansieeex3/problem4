@@ -37,6 +37,7 @@ Joshua Meigs
 #define RET 12
 #define JSRR 4
 #define STR 7
+#define LDR 5
 
 // Macros to get IR bit fields
 #define OPCODE(instr)  (instr >> 12 & 0x000F)

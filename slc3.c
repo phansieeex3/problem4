@@ -226,6 +226,9 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                     case LD:
                         cpu->mar = cpu->pc + immed9;
                         break;
+					case LDR:
+					    cpu->mar = cpu->reg_file[Rs1] + SEXTPCOFFSET6(cpu->ir);
+						break;
                     case ST:
                         cpu->mar = cpu->pc + immed9;
                         break;
@@ -303,6 +306,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         cpu->reg_file[RETURN_REG] = cpu->pc;
                         break;
                     case LD:
+					case LDR:
                         cpu->mdr = memory[cpu->mar];
                         break;
                     case ST:
@@ -356,6 +360,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         updateConCodes(cpu, cpu->reg_file[Rd]);
                         break;
                     case LD:
+					case LDR:
                         cpu->reg_file[Rd] = cpu->mdr;
                         updateConCodes(cpu, cpu->reg_file[Rd]);
                         break;
