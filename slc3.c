@@ -231,7 +231,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         break;
                     case JMP: // and RET
                         //if BaseR == 111
-                        if(cpu->reg_file[Rs1] == 3) //ret case
+                        if(cpu->reg_file[Rs1] == RETURN_REG) //ret case
                         {
                             cpu->pc = cpu->reg_file[RETURN_REG]; //go to register 7?
                         }
@@ -250,6 +250,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         if(NBIT(cpu->ir)) //check if JSRR incase if we implement JSR
                         {
                             //pc = baseR
+							cpu->reg_file[RETURN_REG] = cpu->pc;
                             cpu->pc = cpu->reg_file[Rs1]; 
                         }
                      //implementing JSR here{
@@ -278,7 +279,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                            // sext immediate value
                            cpu->alu_b = SEXTIMMVAL(cpu->ir);
                         } else {
-                            cpu->alu_b = cpu->reg_file[Rs2];
+                           cpu->alu_b = cpu->reg_file[Rs2];
                         }
                         break;
                     case AND:
@@ -296,7 +297,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         break;
                     case TRAP:
                         cpu->mdr = memory[cpu->mar];
-                        cpu->reg_file[7] = cpu->pc;
+                        cpu->reg_file[RETURN_REG] = cpu->pc;
                         break;
                     case LD:
                         cpu->mdr = memory[cpu->mar];
