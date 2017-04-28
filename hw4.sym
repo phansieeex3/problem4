@@ -1,4 +1,7 @@
 //Symbol Name		Page Address
 //----------------	------------
-//	LOOP                    3001
-//	MEMORY                  300C
+//	LOOP                    3003
+//	MEMORY                  304C
+//	PROMPT1                 3014
+//	PROMPT2                 302C
+//	SALT                    3013
