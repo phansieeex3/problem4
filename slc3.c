@@ -200,9 +200,36 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                     case ST:
                         cpu->mar = cpu->pc + immed9;
                         break;
-                    case JMP:
-                        cpu->pc = cpu->reg_file[Rs1];
+                    case JMP: // and RET
+                        //if BaseR == 111
+                        if(cpu->reg_file[Rs1] == 3) //ret case
+                        {
+                            cpu->pc = cpu->reg_file[7]; //go to register 7?
+                        }
+                        else
+                        {
+                            cpu->pc = cpu->reg_file[Rs1];
+                        }
                         break;
+                    case LEA:
+                        //loads DR = PC + SEXT(PCOffset9)
+                        cpu->reg_file[Rd] = cpu->pc + immed9;
+                        //setCC
+                        updateConCodes(cpu, immed9);
+                        break;
+                    case JSRR:
+                        if(NBIT(cpu->ir)) //check if JSRR incase if we implement JSR
+                        {
+                            //pc = baseR
+                            cpu->pc = cpu->reg_file[Rs1]; 
+                        }
+                     //implementing JSR here{
+                            //cpu->pc = cpu->pc + SEXT(PCOffset11);
+                        
+                        break;
+                    //case RET: same case as JMP
+
+
                     case BR:
                         if(ben) {
                             cpu->pc = cpu->pc + immed9;
