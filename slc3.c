@@ -30,14 +30,28 @@ void updateConCodes(CPU_p cpu, short val) {
 
 // Evaluates the trapVector and performs the appropriate action
 // Returns 1 for a halt command, 0 otherwise
-int trap(int trapVector) {
-	 switch(trapVector) {
-        case HALT:
+int trap(CPU_p cpu, DEBUG_WIN_p win) {
+	 int i = 0;
+	 switch(cpu->mar) {
+        case GETCH:
+			cpu->reg_file[IO_REG] = mvwgetch(win->ioWin, win->ioY, win->ioX);
+			break;
+		case OUT:
+		    writeCharToIOWin(win, cpu->reg_file[IO_REG]);
+			break;
+		case PUTS:
+		    while(memory[cpu->reg_file[IO_REG]+i]) {
+				writeCharToIOWin(win, memory[cpu->reg_file[IO_REG]+i]);
+				i++;
+			}
+			break;
+		case HALT:
            return true;
         default:
            break;
      }
      
+	 wrefresh(win->ioWin);
      return false;
 }
 
@@ -87,6 +101,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
 	char* message;
 	char readyToLeave = false;
 	char programLoaded = false;
+	char programRunning = false;
 	int displayMemAddress = DEFAULT_MEM_ADDRESS;
 	short orig = DEFAULT_MEM_ADDRESS;
 	
@@ -96,6 +111,8 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
 		switch (state) {
             case FETCH: // microstates 18, 33, 35 in the book    
 				 do {
+				    if (programRunning) break;
+					
 					readyToLeave = false;
 					updateScreen(win, cpu, memory, programLoaded);
 					promptUser(win, "",input); 
@@ -106,11 +123,13 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
 							 case '1':
 								promptUser(win, "File Name: ",input); 	
 								programLoaded = loadFile(input, cpu);
-									if (programLoaded) {								
+								if (programLoaded) {								
 									win->memAddress = cpu->pc;
 									orig = cpu->pc;
 									updateScreen(win, cpu, memory, programLoaded);
-									clearPrompt(win);	
+									printIoLabels(win);
+									clearPrompt(win);
+                                    clearIOWin(win);
 									displayBoldMessage(win, "Load Successful!");	
 									} else {
 										  clearPrompt(win);
@@ -122,6 +141,16 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
 									displayBoldMessage(win, "No program loaded! Press any key to continue."); 
 								 } else {								  
 									readyToLeave = true;
+									continue;
+								 }
+								 
+								 break;
+							 case '4':
+						         if(!programLoaded) {
+									displayBoldMessage(win, "No program loaded! Press any key to continue."); 
+								 } else {								  
+									readyToLeave = true;
+									programRunning = true;
 									continue;
 								 }
 								 
@@ -204,7 +233,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         //if BaseR == 111
                         if(cpu->reg_file[Rs1] == 3) //ret case
                         {
-                            cpu->pc = cpu->reg_file[7]; //go to register 7?
+                            cpu->pc = cpu->reg_file[RETURN_REG]; //go to register 7?
                         }
                         else
                         {
@@ -296,11 +325,12 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         
                         case TRAP:
                             // Halt if trap function returns 1
-                            if(trap(cpu->mar)) {
+                            if(trap(cpu, win)) {
 							   // end current program
 							   cpu->pc = orig;
                                state = FETCH;
 							   programLoaded = false;
+							   programRunning = false;
 							   displayBoldMessage(win, "Program HALT. Press any key to continue.");
 							   mvwgetch(win->mainWin, PROMPT_DISPLAY_Y, PROMPT_DISPLAY_X);
 							   clearPrompt(win);
@@ -341,7 +371,7 @@ int main(int argc, char* argv[]) {
 
 	// initialize resources
     CPU_p cpu = (CPU_p)malloc(sizeof(CPU_s));
-	DEBUG_WIN_p win = (DEBUG_WIN_p)malloc(sizeof(DEBUG_WIN_p));
+	DEBUG_WIN_p win = (DEBUG_WIN_p)malloc(sizeof(DEBUG_WIN_s));
     initializeWindows(win);
 	
 	// print

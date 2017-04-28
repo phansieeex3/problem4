@@ -31,7 +31,7 @@ void printLabels(DEBUG_WIN_p win) {
 	 mvwprintw(win->mainWin, P_LABEL_Y_X, "P:");
 	 
 	 // Menu
-	 mvwprintw(win->mainWin, MENU_Y_X, "Select: 1) Load, 3) Step, 5) Display Mem, 9) Exit");
+	 mvwprintw(win->mainWin, MENU_Y_X, "Select: 1) Load, 3) Step, 4) Run, 5) Display Mem, 9) Exit");
 
 	 // Prompt
 	 mvwprintw(win->mainWin, PROMPT_Y_X, "> ");
@@ -39,8 +39,7 @@ void printLabels(DEBUG_WIN_p win) {
 
 void printIoLabels(DEBUG_WIN_p win) {
      box(win->ioWin, 0, 0);
-	 mvwprintw(win->ioWin, INPUT_LABEL_Y_X, "Input:");
-	 mvwprintw(win->ioWin, OUTPUT_LABEL_Y_X, "Output:");
+	 mvwprintw(win->ioWin, IO_TITLE_Y_X, "I/O Window");
 }
 
 void updateMemory(DEBUG_WIN_p win, unsigned short* memory, unsigned short mem_index) {
@@ -111,6 +110,7 @@ void initializeWindows(DEBUG_WIN_p win) {
 	unsigned short max_y, max_x, x_pos, y_pos;
 	initscr();				/* start the curses mode */
 	raw();
+	noecho();
 	getmaxyx(stdscr,max_y,max_x);
 	x_pos = (HALF(max_x) - HALF(WIN_WIDTH)) < 0 ? 0 : (HALF(max_x) - HALF(WIN_WIDTH));
 	y_pos = (HALF(max_y) - HALF(TOTAL_WIN_HEIGHT)) < 0 ? 0 : (HALF(max_y) - HALF(TOTAL_WIN_HEIGHT)) - 1;
@@ -123,6 +123,8 @@ void initializeWindows(DEBUG_WIN_p win) {
 	init_pair(CP_WHITE_BLUE, COLOR_WHITE, COLOR_BLUE);
 	wbkgd(win->mainWin, COLOR_PAIR(CP_WHITE_BLUE));
 	wbkgd(win->ioWin, COLOR_PAIR(CP_WHITE_BLUE)); 
+	win->ioY = IO_START_Y;
+	win->ioX = IO_START_X;
 }
 
 void updateScreen(DEBUG_WIN_p win, CPU_p cpu, unsigned short *memory, char programLoaded) {
@@ -172,7 +174,7 @@ void clearPrompt(DEBUG_WIN_p win) {
 }
 
 void promptUser(DEBUG_WIN_p win, char* message, char* input) {
-
+    echo();
     mvwprintw(win->mainWin, PROMPT_DISPLAY_Y, PROMPT_DISPLAY_X, message);	
 	
     // Prompt User
@@ -180,10 +182,34 @@ void promptUser(DEBUG_WIN_p win, char* message, char* input) {
 		 
 	// Clear Prompt Section
     clearPrompt(win);
+	noecho();
 }
 
 void displayBoldMessage(DEBUG_WIN_p win, char* message) {
 	wattron(win->mainWin, A_STANDOUT);
 	mvwprintw(win->mainWin, PROMPT_DISPLAY_Y, PROMPT_DISPLAY_X, message);
 	wattroff(win->mainWin, A_STANDOUT);
+}
+
+void writeCharToIOWin(DEBUG_WIN_p win, unsigned short c) {
+    if (c == NEWLINE) {
+	    win->ioY++;
+		win->ioX = IO_START_X;
+		
+	} else {
+	
+		mvwaddch(win->ioWin, win->ioY, win->ioX, c);
+		win->ioX++;
+		
+		if (win->ioX > WIN_WIDTH - 2) {
+			win->ioY++;
+			win->ioX = IO_START_X;
+		}
+	}
+}
+void clearIOWin(DEBUG_WIN_p win) {
+    wclear(win->ioWin);
+	printIoLabels(win);
+	win->ioY = IO_START_Y;
+	win->ioX = IO_START_X;
 }

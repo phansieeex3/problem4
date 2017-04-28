@@ -57,11 +57,14 @@ Joshua Meigs
 #define P_VAL_Y_X 16,31
 
 #define MENU_Y_X 18,1
-#define INPUT_LABEL_Y_X 1,5
-#define OUTPUT_LABEL_Y_X 2,5
 #define PROMPT_Y_X 19,1
 #define PROMPT_DISPLAY_Y 19
 #define PROMPT_DISPLAY_X 3
+
+#define IO_TITLE_Y_X 0, 30
+#define IO_START_Y 1
+#define IO_START_X 1
+#define NEWLINE 0x0A
 
 #define ARROW_X 38
 #define INPUT_LIMIT 65
@@ -80,6 +83,7 @@ typedef struct {
 	WINDOW *ioWin;
 	unsigned short memAddress;
 	unsigned short maxY, maxX;
+	unsigned short ioY, ioX;
 } DEBUG_WIN_s;
 
 typedef DEBUG_WIN_s* DEBUG_WIN_p;
@@ -118,4 +122,10 @@ void clearPrompt(DEBUG_WIN_p);
 void promptUser(DEBUG_WIN_p, char*, char*);
 
 // Displays a message in the prompt section using the standout attribute
-void displayBoldMessage(DEBUG_WIN_p win, char* message);
+void displayBoldMessage(DEBUG_WIN_p, char*);
+
+// Writes a char to the IO window and updates the IO window's cursor pos
+void writeCharToIOWin(DEBUG_WIN_p win, unsigned short);
+
+// Clears the IO window and resets the IO window's cursor pos to default
+void clearIOWin(DEBUG_WIN_p);

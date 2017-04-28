@@ -20,6 +20,9 @@ Joshua Meigs
 #define STORE 5
 
 #define REG_SIZE 8
+#define IO_REG 0
+#define RETURN_REG 7
+#define SP_REG 6
 
 // Opcodes
 #define ADD 1
@@ -52,6 +55,9 @@ Joshua Meigs
 #define SEXTIMMVAL(instr)  ((instr << 27) >> 27) 
 
 // Trap Vectors
+#define GETCH 0x0020
+#define OUT 0x0021
+#define PUTS 0x0022
 #define HALT 0x0025
 
 // Constants
