@@ -229,6 +229,9 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                     case ST:
                         cpu->mar = cpu->pc + immed9;
                         break;
+					case STR:
+					    cpu->mar = cpu->reg_file[Rs1] + SEXTPCOFFSET6(cpu->ir);
+						break;
                     case JMP: // and RET
                         //if BaseR == 111
                         if(cpu->reg_file[Rs1] == RETURN_REG) //ret case
@@ -303,6 +306,7 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         cpu->mdr = memory[cpu->mar];
                         break;
                     case ST:
+					case STR:
                         cpu->mdr = cpu->reg_file[Rd];
                         break;
                     default:
@@ -357,7 +361,9 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         break;
                     case ST:
                         memory[cpu->mar] = cpu->mdr;
-                        break;   
+                        break; 
+                    case STR:
+                        memory[cpu->mar] = cpu->mdr;					
                 }
                 
                 // do any clean up here in prep for the next complete cycle

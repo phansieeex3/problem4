@@ -36,6 +36,7 @@ Joshua Meigs
 #define LEA 14
 #define RET 12
 #define JSRR 4
+#define STR 7
 
 // Macros to get IR bit fields
 #define OPCODE(instr)  (instr >> 12 & 0x000F)
@@ -52,6 +53,7 @@ Joshua Meigs
 
 // SEXT
 #define SEXTPCOFFSET9(instr) ((instr << 23 ) >> 23)
+#define SEXTPCOFFSET6(instr)  ((instr << 26) >> 26) 
 #define SEXTIMMVAL(instr)  ((instr << 27) >> 27) 
 
 // Trap Vectors
