@@ -16,11 +16,25 @@ STR R2, R1, #0 ;put this in my memory block
 LEA R0, PROMPT2
 PUTS
 GETC
-; -> Go to Sub Routine
+; -> Go to Sub Routine 
+;JSR ENCRYPT
+
+ENCRYPT ;starting subroutine
+LD R2, SALT
+LEA R1, MEMORY ;load beggining address of my array.
+LOOP2:
+	LDR R3, R1, #0 ;R3 - > R1
+	ADD R3, R3, R2 ; subtract R3 with salt
+	STR R3, R1, #0 ;load r3 back to r1
+	ADD R1, R1, #1 ;increment 
+	LDR R3, R1, #0 ;if not zero, keep doing.
+	BRnp LOOP2
+;RET
+
 LEA R0, MEMORY
 PUTS
 HALT
-SALT .FILL #3
+SALT .FILL #-3
 PROMPT1 .STRINGZ "Please enter your name."
 PROMPT2 .STRINGZ "\nPress any key to continue: "
 MEMORY .BLKW #20
