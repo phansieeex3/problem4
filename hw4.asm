@@ -4,7 +4,8 @@ LEA R0, PROMPT1
 PUTS
 LOOP:
 	LEA R0, MEMORY
-        GETC ;input character 
+        GETC ;input character
+        OUT ; echo user input 
 	STR R0, R1, #0 ;put this in my memory block
 	ADD R1, R1, #1 ;increment the memory pointer
         AND R2, R2, #0

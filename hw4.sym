@@ -1,11 +1,11 @@
 //Symbol Name		Page Address
 //----------------	------------
-//	ENCRYPT                 3060
-//	END                     306A
+//	ENCRYPT                 3061
+//	END                     306B
 //	LOOP                    3003
-//	LOOP2                   3063
-//	MEMORY                  304C
-//	PROMPT1                 3017
-//	PROMPT2                 302F
-//	SALT                    3016
-//	SAVEDR3                 306E
+//	LOOP2                   3064
+//	MEMORY                  304D
+//	PROMPT1                 3018
+//	PROMPT2                 3030
+//	SALT                    3017
+//	SAVEDR3                 306F
