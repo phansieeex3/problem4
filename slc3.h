@@ -31,17 +31,16 @@ Joshua Meigs
 #define TRAP 15
 #define LD 2
 #define ST 3
-#define JMP 12
+#define JMP 12 // and RET
 #define BR 0
 #define LEA 14
-#define RET 12
-#define JSRR 4
+#define JSR 4 // and JSRR
 #define STR 7
 #define LDR 6
 
 // Macros to get IR bit fields
 #define OPCODE(instr)  (instr >> 12 & 0x000F)
-#define DSTREG(instr)  (instr >> 9 & 0x0007) //A?
+#define DSTREG(instr)  (instr >> 9 & 0x0007)
 #define SRCREG(instr)  (instr >> 6 & 0x0007)
 #define SRCREG2(instr)  (instr & 0x0007)
 #define IMMBIT(instr)  ((instr & 0x0020) >> 5) 

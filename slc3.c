@@ -252,11 +252,11 @@ int controller (CPU_p cpu, DEBUG_WIN_p win) { //, FILE * file
                         //setCC
                         updateConCodes(cpu, immed9);
                         break;
-                    case JSRR:
-                        if(NBIT(cpu->ir)) //check if JSRR incase if we implement JSR
+                    case JSR:
+                        cpu->reg_file[RETURN_REG] = cpu->pc;
+						if(!NBIT(cpu->ir)) //check if JSRR incase if we implement JSR
                         {
                             //pc = baseR
-							cpu->reg_file[RETURN_REG] = cpu->pc;
                             cpu->pc = cpu->reg_file[Rs1]; 
                         }
                      //implementing JSR here{
