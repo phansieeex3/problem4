@@ -1,9 +1,9 @@
 /*
 TCSS372 - Computer Architecture
-Problem #3
+Problem #4
 Group Members: 
 Shaun Coleman
-Joshua Meigs
+Phansa Chaonpoj
 */
 #include <ncurses.h>			/* ncurses.h includes stdio.h */  
 #include <stdlib.h>
