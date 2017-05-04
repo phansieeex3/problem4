@@ -72,8 +72,8 @@ Phansa Chaonpoj
 #define CP_WHITE_BLUE 1
 #define TOTAL_WIN_HEIGHT 27
 
-#define HEX_OUT_LABEL "x%.04x:"
-#define HEX_OUT_FORMAT "x%.04x"
+#define HEX_OUT_LABEL "x%.04X:"
+#define HEX_OUT_FORMAT "x%.04X"
 #define REG_OUT_FORMAT "R%d:"
 
 #define HALF(x) ((x)/2)
